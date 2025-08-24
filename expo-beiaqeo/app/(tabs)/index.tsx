@@ -1,75 +1,110 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import React from 'react';
+import { View, Text, TouchableOpacity, Alert, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuthStore } from '@/store/authStore';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function HomeScreen() {
+  const { user, logout, isLoading } = useAuthStore();
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Cerrar Sesión',
+      '¿Estás seguro que deseas cerrar sesión?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { 
+          text: 'Cerrar Sesión', 
+          style: 'destructive', 
+          onPress: async () => {
+            try {
+              await logout();
+            } catch (error) {
+              Alert.alert('Error', 'No se pudo cerrar la sesión');
+            }
+          }
+        }
+      ]
+    );
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 justify-center items-center px-6">
+        {/* User Avatar */}
+        <View className="items-center mb-8">
+          {user?.avatar ? (
+            <Image 
+              source={{ uri: user.avatar }}
+              className="w-24 h-24 rounded-full mb-4"
+            />
+          ) : (
+            <View className="w-24 h-24 bg-blue-600 rounded-full items-center justify-center mb-4">
+              <Ionicons name="person" size={32} color="white" />
+            </View>
+          )}
+          
+          <Text className="text-2xl font-bold text-gray-800 mb-2">
+            ¡Bienvenido!
+          </Text>
+          
+          <Text className="text-lg text-gray-600 text-center mb-1">
+            {user?.name || 'Usuario'}
+          </Text>
+          
+          <Text className="text-base text-gray-500 text-center">
+            {user?.email}
+          </Text>
+
+          {user?.provider && (
+            <View className="flex-row items-center mt-2 bg-gray-100 px-3 py-1 rounded-full">
+              <Ionicons 
+                name={user.provider === 'google' ? 'logo-google' : 'mail'} 
+                size={16} 
+                color="#6b7280" 
+              />
+              <Text className="ml-2 text-sm text-gray-600 capitalize">
+                {user.provider === 'google' ? 'Google' : 'Email'}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Success Message */}
+        <View className="bg-green-50 p-6 rounded-lg mb-8 w-full border border-green-200">
+          <Text className="text-green-800 text-center font-medium mb-2">
+            🎉 ¡Autenticación exitosa!
+          </Text>
+          <Text className="text-green-600 text-center">
+            Ya tienes acceso al sistema de control de asistencia. Pronto podrás gestionar tu ubicación y registros.
+          </Text>
+        </View>
+
+        {/* Next Steps */}
+        <View className="bg-blue-50 p-6 rounded-lg mb-8 w-full border border-blue-200">
+          <Text className="text-blue-800 text-center font-medium mb-3">
+            📍 Próximas funcionalidades
+          </Text>
+          <View className="space-y-2">
+            <Text className="text-blue-600 text-sm">• Control de ubicación en tiempo real</Text>
+            <Text className="text-blue-600 text-sm">• Gestión de zonas de trabajo</Text>
+            <Text className="text-blue-600 text-sm">• Historial de asistencia</Text>
+            <Text className="text-blue-600 text-sm">• Notificaciones automáticas</Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          onPress={handleLogout}
+          disabled={isLoading}
+          className={`px-6 py-3 rounded-lg ${
+            isLoading ? 'bg-gray-400' : 'bg-red-600'
+          }`}
+        >
+          <Text className="text-white font-semibold">
+            {isLoading ? 'Cerrando sesión...' : 'Cerrar Sesión'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
