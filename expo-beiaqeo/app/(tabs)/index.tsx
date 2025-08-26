@@ -13,9 +13,9 @@ export default function HomeScreen() {
       '¿Estás seguro que deseas cerrar sesión?',
       [
         { text: 'Cancelar', style: 'cancel' },
-        { 
-          text: 'Cerrar Sesión', 
-          style: 'destructive', 
+        {
+          text: 'Cerrar Sesión',
+          style: 'destructive',
           onPress: async () => {
             try {
               await logout();
@@ -34,7 +34,7 @@ export default function HomeScreen() {
         {/* User Avatar */}
         <View className="items-center mb-8">
           {user?.avatar ? (
-            <Image 
+            <Image
               source={{ uri: user.avatar }}
               className="w-24 h-24 rounded-full mb-4"
             />
@@ -43,25 +43,25 @@ export default function HomeScreen() {
               <Ionicons name="person" size={32} color="white" />
             </View>
           )}
-          
+
           <Text className="text-2xl font-bold text-gray-800 mb-2">
             ¡Bienvenido!
           </Text>
-          
+
           <Text className="text-lg text-gray-600 text-center mb-1">
             {user?.name || 'Usuario'}
           </Text>
-          
+
           <Text className="text-base text-gray-500 text-center">
             {user?.email}
           </Text>
 
           {user?.provider && (
             <View className="flex-row items-center mt-2 bg-gray-100 px-3 py-1 rounded-full">
-              <Ionicons 
-                name={user.provider === 'google' ? 'logo-google' : 'mail'} 
-                size={16} 
-                color="#6b7280" 
+              <Ionicons
+                name={user.provider === 'google' ? 'logo-google' : 'mail'}
+                size={16}
+                color="#6b7280"
               />
               <Text className="ml-2 text-sm text-gray-600 capitalize">
                 {user.provider === 'google' ? 'Google' : 'Email'}

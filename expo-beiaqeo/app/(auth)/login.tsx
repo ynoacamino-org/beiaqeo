@@ -26,7 +26,7 @@ export default function LoginScreen() {
       await loginWithGoogle();
     } catch (error: any) {
       Alert.alert(
-        'Error de Autenticación', 
+        'Error de Autenticación',
         error.message || 'No se pudo iniciar sesión con Google. Asegúrate de usar un correo institucional.'
       );
     }
@@ -51,7 +51,7 @@ export default function LoginScreen() {
       }
     } catch (error: any) {
       Alert.alert(
-        'Error de Autenticación', 
+        'Error de Autenticación',
         error.message || (isRegisterMode ? 'Error al registrarse' : 'Error al iniciar sesión')
       );
     }
@@ -178,10 +178,10 @@ export default function LoginScreen() {
                 }`}
               >
                 <Text className="text-white text-center text-lg font-semibold">
-                  {isLoading 
-                    ? 'Procesando...' 
-                    : isRegisterMode 
-                      ? 'Crear Cuenta' 
+                  {isLoading
+                    ? 'Procesando...'
+                    : isRegisterMode
+                      ? 'Crear Cuenta'
                       : 'Iniciar Sesión'
                   }
                 </Text>
@@ -195,7 +195,7 @@ export default function LoginScreen() {
                 className="py-3"
               >
                 <Text className="text-blue-600 text-center font-medium">
-                  {isRegisterMode 
+                  {isRegisterMode
                     ? '¿Ya tienes cuenta? Inicia sesión'
                     : '¿No tienes cuenta? Regístrate'
                   }
