@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuthStore } from '@/store/authStore';
 import { Ionicons } from '@expo/vector-icons';
+import { pocketbaseAuth } from '@/services/pocketbaseAuth';
 
 export default function HomeScreen() {
-  const { user, logout, isLoading } = useAuthStore();
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const user = pocketbaseAuth.getCurrentUser();
   const handleLogout = () => {
     Alert.alert(
       'Cerrar Sesión',
@@ -17,10 +17,14 @@ export default function HomeScreen() {
           text: 'Cerrar Sesión',
           style: 'destructive',
           onPress: async () => {
+            setIsLoading(true);
             try {
-              await logout();
+              await pocketbaseAuth.logout();
             } catch (error) {
+              console.error(error);
               Alert.alert('Error', 'No se pudo cerrar la sesión');
+            } finally {
+              setIsLoading(false);
             }
           }
         }

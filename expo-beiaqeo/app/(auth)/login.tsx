@@ -2,67 +2,63 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuthStore } from '@/store/authStore';
 import { Ionicons } from '@expo/vector-icons';
+import { pocketbaseAuth } from '@/services/pocketbaseAuth';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [showEmailAuth, setShowEmailAuth] = useState(false);
-  const [isRegisterMode, setIsRegisterMode] = useState(false);
-
-  const { loginWithGoogle, loginWithEmail, registerWithEmail, isLoading } = useAuthStore();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleGoogleLogin = async () => {
+    setIsLoading(true);
     try {
-      await loginWithGoogle();
+      await pocketbaseAuth.loginWithGoogle();
     } catch (error: any) {
       Alert.alert(
         'Error de Autenticación',
         error.message || 'No se pudo iniciar sesión con Google. Asegúrate de usar un correo institucional.'
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleEmailAuth = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Por favor completa todos los campos requeridos');
-      return;
-    }
+  // const handleEmailAuth = async () => {
+  //   if (!email || !password) {
+  //     Alert.alert('Error', 'Por favor completa todos los campos requeridos');
+  //     return;
+  //   }
 
-    if (isRegisterMode && !name) {
-      Alert.alert('Error', 'El nombre es requerido para el registro');
-      return;
-    }
+  //   if (isRegisterMode && !name) {
+  //     Alert.alert('Error', 'El nombre es requerido para el registro');
+  //     return;
+  //   }
 
-    try {
-      if (isRegisterMode) {
-        await registerWithEmail(name, email, password);
-      } else {
-        await loginWithEmail(email, password);
-      }
-    } catch (error: any) {
-      Alert.alert(
-        'Error de Autenticación',
-        error.message || (isRegisterMode ? 'Error al registrarse' : 'Error al iniciar sesión')
-      );
-    }
-  };
+  //   try {
+  //     if (isRegisterMode) {
+  //       await registerWithEmail(name, email, password);
+  //     } else {
+  //       await loginWithEmail(email, password);
+  //     }
+  //   } catch (error: any) {
+  //     Alert.alert(
+  //       'Error de Autenticación',
+  //       error.message || (isRegisterMode ? 'Error al registrarse' : 'Error al iniciar sesión')
+  //     );
+  //   }
+  // };
 
-  const resetForm = () => {
-    setEmail('');
-    setPassword('');
-    setName('');
-    setIsRegisterMode(false);
-  };
+  // const resetForm = () => {
+  //   setEmail('');
+  //   setPassword('');
+  //   setName('');
+  //   setIsRegisterMode(false);
+  // };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -87,8 +83,7 @@ export default function LoginScreen() {
             </Text>
           </View>
 
-          {!showEmailAuth ? (
-            /* Login Options */
+          {/*{!showEmailAuth ? (*/}
             <View className="space-y-6">
               <TouchableOpacity
                 onPress={handleGoogleLogin}
@@ -101,7 +96,7 @@ export default function LoginScreen() {
                 </Text>
               </TouchableOpacity>
 
-              <View className="flex-row items-center my-6">
+            {/*<View className="flex-row items-center my-6">
                 <View className="flex-1 h-px bg-gray-300" />
                 <Text className="mx-4 text-gray-500">o</Text>
                 <View className="flex-1 h-px bg-gray-300" />
@@ -114,11 +109,10 @@ export default function LoginScreen() {
                 <Text className="text-blue-600 text-center font-medium">
                   Usar correo electrónico
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity>*/}
             </View>
-          ) : (
-            /* Email Auth Form */
-            <View className="space-y-6">
+          {/*) : (*/}
+            {/*<View className="space-y-6">
               <TouchableOpacity
                 onPress={() => {
                   setShowEmailAuth(false);
@@ -201,8 +195,8 @@ export default function LoginScreen() {
                   }
                 </Text>
               </TouchableOpacity>
-            </View>
-          )}
+            </View>*/}
+          {/*)}*/}
 
           {/* Footer Info */}
           <View className="mt-12 p-4 bg-blue-50 rounded-lg">

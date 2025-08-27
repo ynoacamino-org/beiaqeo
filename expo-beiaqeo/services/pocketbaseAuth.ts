@@ -5,12 +5,12 @@ import * as AuthSession from "expo-auth-session";
 import PocketBase, { AsyncAuthStore, AuthRecord, RecordAuthResponse } from 'pocketbase';
 import eventsource from 'react-native-sse';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.EventSource = eventsource as any;
 
 const store = new AsyncAuthStore({
   save: async (serialized) => AsyncStorage.setItem('pb_auth', serialized),
   initial: AsyncStorage.getItem('pb_auth'),
+  clear: async () => AsyncStorage.clear()
 });
 
 const pb = new PocketBase(PocketBaseConfig.url, store);
@@ -28,13 +28,6 @@ class PocketBaseAuthService {
       scheme: APP_CONSTANTS.SCHEME,
       path: 'auth/callback',
     })
-
-    const authUrl =
-      `https://accounts.google.com/o/oauth2/v2/auth` +
-      `?client_id=${AuthConfig.googleClientId}` +
-      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-      `&response_type=code` +
-      `&scope=openid%20email%20profile`;
 
     const request = new AuthSession.AuthRequest({
       clientId: AuthConfig.googleClientId,
