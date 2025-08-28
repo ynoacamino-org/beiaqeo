@@ -1,51 +1,30 @@
-import { APP_CONSTANTS } from '@/config/constants';
-import { AuthConfig } from '@/config/env';
+// import { APP_CONSTANTS } from '@/config/constants';
 import { pb } from '@/services/pocketbase/pb';
-import * as AuthSession from "expo-auth-session";
 import PocketBase, { AuthRecord, RecordAuthResponse } from 'pocketbase';
+import * as WebBrowser from "expo-web-browser";
+import EventSource from "react-native-sse";
+
+// @ts-ignore
+global.EventSource = EventSource;
+
+WebBrowser.maybeCompleteAuthSession();
 
 class PocketBaseAuthService {
-
-  constructor() {
-    pb.authStore.onChange((token, model) => {
-      console.log('PocketBase auth changed:', !!token, model?.email);
-    });
-  }
-
   async loginWithGoogle(): Promise<RecordAuthResponse> {
-    const redirectUri = AuthSession.makeRedirectUri({
-      scheme: APP_CONSTANTS.SCHEME,
-      path: 'auth/callback',
+    const recordAuth = await pb.collection("users").authWithOAuth2({
+      provider: 'google',
+      urlCallback: async (url) => {
+        await WebBrowser.openAuthSessionAsync(url, "http://10.0.2.2:8090/api/custom-oauth2-redirect/google", {
+          preferEphemeralSession: true,
+        }).catch(console.error);
+      }
     })
 
-    const request = new AuthSession.AuthRequest({
-      clientId: AuthConfig.googleClientId,
-      redirectUri,
-      scopes: ['openid', 'email', 'profile'],
-      responseType: AuthSession.ResponseType.Code,
-    });
+    WebBrowser.dismissAuthSession();
 
-    const discovery = {
-      authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-      tokenEndpoint: "https://oauth2.googleapis.com/token",
-    };
+    console.log('Logged in user:', recordAuth.record);
 
-    const result = await request.promptAsync(discovery);
-
-    if (result.type === "success" && result.params.code) {
-      const { code } = result.params;
-
-      const authData = await pb.collection('users').authWithOAuth2Code(
-        'google',
-        code,
-        request.codeVerifier ?? '',
-        redirectUri
-      );
-
-      return authData;
-    } else {
-      throw new Error("El inicio de sesión ha fallado");
-    }
+    return recordAuth;
   }
 
   async logout(): Promise<void> {
