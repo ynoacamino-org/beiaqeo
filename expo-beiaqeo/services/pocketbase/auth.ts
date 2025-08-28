@@ -3,7 +3,6 @@ import { AuthConfig } from '@/config/env';
 import { pb } from '@/services/pocketbase/pb';
 import * as AuthSession from "expo-auth-session";
 import PocketBase, { AuthRecord, RecordAuthResponse } from 'pocketbase';
-import { Linking } from 'react-native';
 
 class PocketBaseAuthService {
 
@@ -14,48 +13,39 @@ class PocketBaseAuthService {
   }
 
   async loginWithGoogle(): Promise<RecordAuthResponse> {
-    // const redirectUri = AuthSession.makeRedirectUri({
-    //   scheme: APP_CONSTANTS.SCHEME,
-    //   path: 'auth/callback',
-    // })
+    const redirectUri = AuthSession.makeRedirectUri({
+      scheme: APP_CONSTANTS.SCHEME,
+      path: 'auth/callback',
+    })
 
-    // const request = new AuthSession.AuthRequest({
-    //   clientId: AuthConfig.googleClientId,
-    //   redirectUri,
-    //   scopes: ['openid', 'email', 'profile'],
-    //   responseType: AuthSession.ResponseType.Code,
-    // });
+    const request = new AuthSession.AuthRequest({
+      clientId: AuthConfig.googleClientId,
+      redirectUri,
+      scopes: ['openid', 'email', 'profile'],
+      responseType: AuthSession.ResponseType.Code,
+    });
 
-    // const discovery = {
-    //   authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-    //   tokenEndpoint: "https://oauth2.googleapis.com/token",
-    // };
+    const discovery = {
+      authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
+      tokenEndpoint: "https://oauth2.googleapis.com/token",
+    };
 
-    // const result = await request.promptAsync(discovery);
+    const result = await request.promptAsync(discovery);
 
-    // if (result.type === "success" && result.params.code) {
-    //   const { code } = result.params;
+    if (result.type === "success" && result.params.code) {
+      const { code } = result.params;
 
-    //   const authData = await pb.collection('users').authWithOAuth2Code(
-    //     'google',
-    //     code,
-    //     request.codeVerifier ?? '',
-    //     redirectUri
-    //   );
+      const authData = await pb.collection('users').authWithOAuth2Code(
+        'google',
+        code,
+        request.codeVerifier ?? '',
+        redirectUri
+      );
 
-    //   return authData;
-    // } else {
-    //   throw new Error("El inicio de sesión ha fallado");
-    // }
-    pb.autoCancellation(false);
-    return pb.collection('users').authWithOAuth2({provider: 'google', urlCallback: async (url) => {
-      try {
-        await Linking.openURL(url)
-      } catch(error) {
-        console.error(error);
-      }
-    }})
-
+      return authData;
+    } else {
+      throw new Error("El inicio de sesión ha fallado");
+    }
   }
 
   async logout(): Promise<void> {
