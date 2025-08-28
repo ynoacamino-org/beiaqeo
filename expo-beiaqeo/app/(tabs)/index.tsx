@@ -7,7 +7,6 @@ import { useRouter } from 'expo-router';
 import { extractAvatar } from '@/lib/utils';
 
 export default function HomeScreen() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user, logout } = useAuth();
   const handleLogout = async () => {
