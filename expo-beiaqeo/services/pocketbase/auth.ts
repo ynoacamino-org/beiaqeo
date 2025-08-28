@@ -14,13 +14,9 @@ class PocketBaseAuthService {
     const recordAuth = await pb.collection("users").authWithOAuth2({
       provider: 'google',
       urlCallback: async (url) => {
-        await WebBrowser.openAuthSessionAsync(url, "http://10.0.2.2:8090/api/custom-oauth2-redirect/google", {
-          preferEphemeralSession: true,
-        }).catch(console.error);
+        await WebBrowser.openAuthSessionAsync(url, "https://beiaqeo.ynoacamino.site/api/oauth2-redirect").catch(console.error);
       }
     })
-
-    WebBrowser.dismissAuthSession();
 
     console.log('Logged in user:', recordAuth.record);
 
