@@ -1,11 +1,7 @@
-// import { APP_CONSTANTS } from '@/config/constants';
 import { pb } from '@/services/pocketbase/pb';
 import PocketBase, { AuthRecord, RecordAuthResponse } from 'pocketbase';
 import * as WebBrowser from "expo-web-browser";
-import EventSource from "react-native-sse";
-
-// @ts-ignore
-global.EventSource = EventSource;
+import '@/config/eventsource';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -14,11 +10,9 @@ class PocketBaseAuthService {
     const recordAuth = await pb.collection("users").authWithOAuth2({
       provider: 'google',
       urlCallback: async (url) => {
-        await WebBrowser.openAuthSessionAsync(url, "https://beiaqeo.ynoacamino.site/api/oauth2-redirect").catch(console.error);
+        await WebBrowser.openAuthSessionAsync(url).catch(console.error);
       }
     })
-
-    console.log('Logged in user:', recordAuth.record);
 
     return recordAuth;
   }

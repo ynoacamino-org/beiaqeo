@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, Image, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/components/providers/authProvider';
 import { useRouter } from 'expo-router';
+import { extractAvatar } from '@/lib/utils';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -11,15 +12,15 @@ export default function HomeScreen() {
   const { user, logout } = useAuth();
   const handleLogout = async () => {
     if (Platform.OS === 'web') {
-        setIsLoading(true);
-        try {
-          await logout();
-          router.replace('/');
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsLoading(false);
-        }
+      setIsLoading(true);
+      try {
+        await logout();
+        router.replace('/');
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       Alert.alert(
         'Cerrar Sesión',
@@ -33,16 +34,16 @@ export default function HomeScreen() {
               setIsLoading(true);
               try {
                 await logout();
-                router.replace('/')
+                router.replace('/');
               } catch (error) {
                 console.error(error);
                 Alert.alert('Error', 'No se pudo cerrar la sesión');
               } finally {
                 setIsLoading(false);
               }
-            }
-          }
-        ]
+            },
+          },
+        ],
       );
     }
   };
@@ -54,7 +55,7 @@ export default function HomeScreen() {
         <View className="items-center mb-8">
           {user?.avatar ? (
             <Image
-              source={{ uri: user.avatar }}
+              source={{ uri: extractAvatar(user) }}
               className="w-24 h-24 rounded-full mb-4"
             />
           ) : (
