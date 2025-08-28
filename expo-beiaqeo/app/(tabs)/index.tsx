@@ -3,10 +3,8 @@ import { View, Text, TouchableOpacity, Alert, Image, Platform } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user, logout } = useAuth();
   const handleLogout = async () => {
@@ -14,7 +12,6 @@ export default function HomeScreen() {
         setIsLoading(true);
         try {
           await logout();
-          router.replace('/');
         } catch (error) {
           console.error(error);
         } finally {
@@ -33,7 +30,6 @@ export default function HomeScreen() {
               setIsLoading(true);
               try {
                 await logout();
-                router.replace('/')
               } catch (error) {
                 console.error(error);
                 Alert.alert('Error', 'No se pudo cerrar la sesión');

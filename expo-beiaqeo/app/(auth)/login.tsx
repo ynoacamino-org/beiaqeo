@@ -19,7 +19,7 @@ export default function LoginScreen() {
     setIsLoading(true);
     try {
       await loginWithGoogle();
-      router.replace('/');
+      router.navigate('/(tabs)');
     } catch (error: any) {
       Alert.alert(
         'Error de Autenticación',
