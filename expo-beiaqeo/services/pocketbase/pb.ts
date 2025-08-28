@@ -1,4 +1,4 @@
-import { PocketBaseConfig } from '@/config/env';
+import { PocketBaseConfig } from '@/config/global';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PocketBase, { AsyncAuthStore } from 'pocketbase';
 

@@ -8,8 +8,8 @@ import (
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 
-	// "github.com/ynoacamino/publicaciones-page/backend/hooks"
 	_ "github.com/ynoacamino-org/beiaqeo/pocketbase/migrations"
+	"github.com/ynoacamino-org/beiaqeo/pocketbase/routes"
 
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -23,7 +23,7 @@ func main() {
 		Automigrate: isGoRun,
 	})
 
-	// hooks.HookHandler(app)
+	app.OnServe().BindFunc(routes.Register)
 
 	if err := app.Start(); err != nil {
 		log.Fatal(err)

@@ -1,5 +1,5 @@
 import { pbAuth } from '@/services/pocketbase/auth';
-import { AuthRecord } from 'pocketbase'
+import { AuthRecord } from 'pocketbase';
 import { createContext, ReactNode, use, useEffect, useState } from 'react';
 
 type AuthContextType = {
@@ -8,12 +8,12 @@ type AuthContextType = {
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<void>;
-}
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({
-children
+  children,
 }: {
   children: ReactNode
 }) {
@@ -23,37 +23,37 @@ children
   useEffect(() => {
     const unsubscribe = pbAuth.getPocketBase().authStore.onChange((_token, model) => {
       setUser(model);
-      setIsAuthenticated(pbAuth.isAuthenticated())
+      setIsAuthenticated(pbAuth.isAuthenticated());
     });
 
     return () => {
       unsubscribe();
-    }
+    };
   }, []);
 
   const loginWithGoogle = async () => {
     const authData = await pbAuth.loginWithGoogle();
     setUser(authData.record);
     setIsAuthenticated(true);
-  }
+  };
 
   const logout = async () => {
     await pbAuth.logout();
     setUser(null);
     setIsAuthenticated(false);
-  }
+  };
 
   const refreshAuth = async () => {
     await pbAuth.refreshAuth();
     setUser(pbAuth.getCurrentUser());
     setIsAuthenticated(pbAuth.isAuthenticated());
-  }
+  };
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, loginWithGoogle, logout, refreshAuth }}>
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
 
 export function useAuth() {
