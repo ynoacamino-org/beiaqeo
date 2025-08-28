@@ -3,21 +3,20 @@ import {
   View,
   Text,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { pocketbaseAuth } from '@/services/pocketbaseAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { loginWithGoogle } = useAuth()
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
-      await pocketbaseAuth.loginWithGoogle();
+      await loginWithGoogle();
     } catch (error: any) {
       Alert.alert(
         'Error de Autenticación',
@@ -62,10 +61,10 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <KeyboardAvoidingView
+      {/*<KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
-      >
+      >*/}
         <View className="flex-1 justify-center px-8">
           {/* Header */}
           <View className="items-center mb-12">
@@ -76,10 +75,10 @@ export default function LoginScreen() {
               Beiaqeo
             </Text>
             <Text className="text-lg text-gray-600 text-center">
-              Control de Asistencia con PocketBase
+              Control de Asistencia
             </Text>
             <Text className="text-sm text-gray-500 text-center mt-2">
-              Inicia sesión con tu correo institucional
+              Inicia sesión con tu correo institucional UNSA
             </Text>
           </View>
 
@@ -201,14 +200,14 @@ export default function LoginScreen() {
           {/* Footer Info */}
           <View className="mt-12 p-4 bg-blue-50 rounded-lg">
             <Text className="text-blue-800 text-center font-medium mb-2">
-              📍 PocketBase + Acceso Institucional
+              📍 Acceso Institucional
             </Text>
             <Text className="text-blue-600 text-center text-sm">
-              Solo correos institucionales (.edu) están autorizados. Datos seguros con PocketBase.
+              Solo correos institucionales están autorizados.
             </Text>
           </View>
         </View>
-      </KeyboardAvoidingView>
+      {/*</KeyboardAvoidingView>*/}
     </SafeAreaView>
   );
 }

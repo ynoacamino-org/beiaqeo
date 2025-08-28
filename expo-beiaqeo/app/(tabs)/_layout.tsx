@@ -7,14 +7,12 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { pocketbaseAuth } from '@/services/pocketbaseAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { isAuthenticated } = useAuth()
 
-  const isAuthenticated = pocketbaseAuth.isAuthenticated();
-
-  // 🚨 Si no está autenticado, redirige a la parte de auth
   if (!isAuthenticated) {
     return <Redirect href="/(auth)/login" />;
   }

@@ -1,19 +1,8 @@
 import { APP_CONSTANTS } from '@/config/constants';
-import { AuthConfig, PocketBaseConfig } from '@/config/env';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthConfig } from '@/config/env';
+import { pb } from '@/services/pocketbase/pb';
 import * as AuthSession from "expo-auth-session";
-import PocketBase, { AsyncAuthStore, AuthRecord, RecordAuthResponse } from 'pocketbase';
-import eventsource from 'react-native-sse';
-
-global.EventSource = eventsource as any;
-
-const store = new AsyncAuthStore({
-  save: async (serialized) => AsyncStorage.setItem('pb_auth', serialized),
-  initial: AsyncStorage.getItem('pb_auth'),
-  clear: async () => AsyncStorage.clear()
-});
-
-const pb = new PocketBase(PocketBaseConfig.url, store);
+import PocketBase, { AuthRecord, RecordAuthResponse } from 'pocketbase';
 
 class PocketBaseAuthService {
 
@@ -55,7 +44,7 @@ class PocketBaseAuthService {
 
       return authData;
     } else {
-      throw new Error("Login con Google cancelado o fallido");
+      throw new Error("El inicio de sesión ha fallado");
     }
 
   }
@@ -100,5 +89,4 @@ class PocketBaseAuthService {
   }
 }
 
-export const pocketbaseAuth = new PocketBaseAuthService();
-export { pb };
+export const pbAuth = new PocketBaseAuthService();
