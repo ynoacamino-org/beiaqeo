@@ -18,7 +18,20 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.beiaqeo.app"
+      "package": "com.beiaqeo.app",
+      "intentFilters": [
+{
+  "action":"VIEW",
+  "data": [
+{
+  "scheme": "https",
+  "host": "beaiqeo.ynoacamino.site",
+  "pathPrefix": "/api/custom-oauth2-redirect"
+}
+  ],
+  "category":["BROWSABLE", "DEFAULT"]
+}
+      ]
     },
     "web": {
       "bundler": "metro",
