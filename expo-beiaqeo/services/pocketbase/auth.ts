@@ -5,18 +5,16 @@ import * as AuthSession from "expo-auth-session";
 import PocketBase, { AuthRecord, RecordAuthResponse } from 'pocketbase';
 
 class PocketBaseAuthService {
-
-  constructor() {
-    pb.authStore.onChange((token, model) => {
-      console.log('PocketBase auth changed:', !!token, model?.email);
-    });
-  }
-
   async loginWithGoogle(): Promise<RecordAuthResponse> {
     const redirectUri = AuthSession.makeRedirectUri({
       scheme: APP_CONSTANTS.SCHEME,
       path: 'auth/callback',
     })
+
+    const discovery = {
+      authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
+      tokenEndpoint: "https://oauth2.googleapis.com/token",
+    };
 
     const request = new AuthSession.AuthRequest({
       clientId: AuthConfig.googleClientId,
@@ -25,27 +23,26 @@ class PocketBaseAuthService {
       responseType: AuthSession.ResponseType.Code,
     });
 
-    const discovery = {
-      authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-      tokenEndpoint: "https://oauth2.googleapis.com/token",
-    };
+    if (!request.codeVerifier) {
+      throw new Error('No se pudo generar el code verifier.');
+    }
 
     const result = await request.promptAsync(discovery);
 
-    if (result.type === "success" && result.params.code) {
-      const { code } = result.params;
-
-      const authData = await pb.collection('users').authWithOAuth2Code(
-        'google',
-        code,
-        request.codeVerifier ?? '',
-        redirectUri
-      );
-
-      return authData;
-    } else {
-      throw new Error("El inicio de sesión ha fallado");
+    if (result.type !== "success" || !result.params.code) {
+      throw new Error(`El inicio de sesión ha fallado: ${result.type}`);
     }
+
+    const { code } = result.params;
+
+    const authData = await pb.collection('users').authWithOAuth2Code(
+      'google',
+      code,
+      request.codeVerifier,
+      redirectUri
+    );
+
+    return authData;
   }
 
   async logout(): Promise<void> {
