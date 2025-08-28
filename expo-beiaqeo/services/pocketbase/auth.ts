@@ -1,19 +1,8 @@
 import { APP_CONSTANTS } from '@/config/constants';
-import { AuthConfig, PocketBaseConfig } from '@/config/env';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthConfig } from '@/config/env';
+import { pb } from '@/services/pocketbase/pb';
 import * as AuthSession from "expo-auth-session";
-import PocketBase, { AsyncAuthStore, AuthRecord, RecordAuthResponse } from 'pocketbase';
-import eventsource from 'react-native-sse';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-global.EventSource = eventsource as any;
-
-const store = new AsyncAuthStore({
-  save: async (serialized) => AsyncStorage.setItem('pb_auth', serialized),
-  initial: AsyncStorage.getItem('pb_auth'),
-});
-
-const pb = new PocketBase(PocketBaseConfig.url, store);
+import PocketBase, { AuthRecord, RecordAuthResponse } from 'pocketbase';
 
 class PocketBaseAuthService {
 
@@ -28,13 +17,6 @@ class PocketBaseAuthService {
       scheme: APP_CONSTANTS.SCHEME,
       path: 'auth/callback',
     })
-
-    const authUrl =
-      `https://accounts.google.com/o/oauth2/v2/auth` +
-      `?client_id=${AuthConfig.googleClientId}` +
-      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-      `&response_type=code` +
-      `&scope=openid%20email%20profile`;
 
     const request = new AuthSession.AuthRequest({
       clientId: AuthConfig.googleClientId,
@@ -62,9 +44,8 @@ class PocketBaseAuthService {
 
       return authData;
     } else {
-      throw new Error("Login con Google cancelado o fallido");
+      throw new Error("El inicio de sesión ha fallado");
     }
-
   }
 
   async logout(): Promise<void> {
@@ -107,5 +88,4 @@ class PocketBaseAuthService {
   }
 }
 
-export const pocketbaseAuth = new PocketBaseAuthService();
-export { pb };
+export const pbAuth = new PocketBaseAuthService();

@@ -1,31 +1,50 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Alert, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Alert, Image, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuthStore } from '@/store/authStore';
 import { Ionicons } from '@expo/vector-icons';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
-  const { user, logout, isLoading } = useAuthStore();
-
-  const handleLogout = () => {
-    Alert.alert(
-      'Cerrar Sesión',
-      '¿Estás seguro que deseas cerrar sesión?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { 
-          text: 'Cerrar Sesión', 
-          style: 'destructive', 
-          onPress: async () => {
-            try {
-              await logout();
-            } catch (error) {
-              Alert.alert('Error', 'No se pudo cerrar la sesión');
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { user, logout } = useAuth();
+  const handleLogout = async () => {
+    if (Platform.OS === 'web') {
+        setIsLoading(true);
+        try {
+          await logout();
+          router.replace('/');
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsLoading(false);
+        }
+    } else {
+      Alert.alert(
+        'Cerrar Sesión',
+        '¿Estás seguro que deseas cerrar sesión?',
+        [
+          { text: 'Cancelar', style: 'cancel' },
+          {
+            text: 'Cerrar Sesión',
+            style: 'destructive',
+            onPress: async () => {
+              setIsLoading(true);
+              try {
+                await logout();
+                router.replace('/')
+              } catch (error) {
+                console.error(error);
+                Alert.alert('Error', 'No se pudo cerrar la sesión');
+              } finally {
+                setIsLoading(false);
+              }
             }
           }
-        }
-      ]
-    );
+        ]
+      );
+    }
   };
 
   return (
@@ -34,7 +53,7 @@ export default function HomeScreen() {
         {/* User Avatar */}
         <View className="items-center mb-8">
           {user?.avatar ? (
-            <Image 
+            <Image
               source={{ uri: user.avatar }}
               className="w-24 h-24 rounded-full mb-4"
             />
@@ -43,25 +62,25 @@ export default function HomeScreen() {
               <Ionicons name="person" size={32} color="white" />
             </View>
           )}
-          
+
           <Text className="text-2xl font-bold text-gray-800 mb-2">
             ¡Bienvenido!
           </Text>
-          
+
           <Text className="text-lg text-gray-600 text-center mb-1">
             {user?.name || 'Usuario'}
           </Text>
-          
+
           <Text className="text-base text-gray-500 text-center">
             {user?.email}
           </Text>
 
           {user?.provider && (
             <View className="flex-row items-center mt-2 bg-gray-100 px-3 py-1 rounded-full">
-              <Ionicons 
-                name={user.provider === 'google' ? 'logo-google' : 'mail'} 
-                size={16} 
-                color="#6b7280" 
+              <Ionicons
+                name={user.provider === 'google' ? 'logo-google' : 'mail'}
+                size={16}
+                color="#6b7280"
               />
               <Text className="ml-2 text-sm text-gray-600 capitalize">
                 {user.provider === 'google' ? 'Google' : 'Email'}
