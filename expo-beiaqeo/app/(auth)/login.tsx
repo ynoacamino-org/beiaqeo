@@ -8,15 +8,18 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'expo-router';
 
 export default function LoginScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
   const { loginWithGoogle } = useAuth()
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
       await loginWithGoogle();
+      router.replace('/');
     } catch (error: any) {
       Alert.alert(
         'Error de Autenticación',

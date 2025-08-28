@@ -1,35 +1,50 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Image, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user, logout } = useAuth();
-  const handleLogout = () => {
-    Alert.alert(
-      'Cerrar Sesión',
-      '¿Estás seguro que deseas cerrar sesión?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Cerrar Sesión',
-          style: 'destructive',
-          onPress: async () => {
-            setIsLoading(true);
-            try {
-              await logout();
-            } catch (error) {
-              console.error(error);
-              Alert.alert('Error', 'No se pudo cerrar la sesión');
-            } finally {
-              setIsLoading(false);
+  const handleLogout = async () => {
+    if (Platform.OS === 'web') {
+        setIsLoading(true);
+        try {
+          await logout();
+          router.replace('/');
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsLoading(false);
+        }
+    } else {
+      Alert.alert(
+        'Cerrar Sesión',
+        '¿Estás seguro que deseas cerrar sesión?',
+        [
+          { text: 'Cancelar', style: 'cancel' },
+          {
+            text: 'Cerrar Sesión',
+            style: 'destructive',
+            onPress: async () => {
+              setIsLoading(true);
+              try {
+                await logout();
+                router.replace('/')
+              } catch (error) {
+                console.error(error);
+                Alert.alert('Error', 'No se pudo cerrar la sesión');
+              } finally {
+                setIsLoading(false);
+              }
             }
           }
-        }
-      ]
-    );
+        ]
+      );
+    }
   };
 
   return (
