@@ -1,4 +1,4 @@
-import ENV from "./env";
+import ENV from './env';
 
 export const AppConfig = {
   NAME: 'Beiaqeo',

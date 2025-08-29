@@ -1,20 +1,18 @@
 import { pb } from '@/services/pocketbase/pb';
 import PocketBase, { AuthRecord, RecordAuthResponse } from 'pocketbase';
-import * as WebBrowser from "expo-web-browser";
+import * as WebBrowser from 'expo-web-browser';
 import '@/config/eventsource';
 
 WebBrowser.maybeCompleteAuthSession();
 
 class PocketBaseAuthService {
   async loginWithGoogle(): Promise<RecordAuthResponse> {
-    const redirectUrl = `${PocketBaseConfig.url}/api/custom-oauth2-redirect/google`
-    const recordAuth = await pb.collection("users").authWithOAuth2({
+    const recordAuth = await pb.collection('users').authWithOAuth2({ 
       provider: 'google',
       urlCallback: async (url) => {
         await WebBrowser.openAuthSessionAsync(url).catch(console.error);
-      }
-    })
-    
+      },
+    });
     return recordAuth;
   }
 
