@@ -29,7 +29,7 @@
       </intent-filter>
       <intent-filter data-generated="true">
         <action android:name="android.intent.action.VIEW"/>
-        <data android:scheme="https" android:host="beiaqeo.ynoacamino.site" android:pathPrefix="/api/custom-oauth2-redirect"/>
+        <data android:scheme="https" android:host="beiaqeo.ynoacamino.site" android:pathPrefix="/auth/callback"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
