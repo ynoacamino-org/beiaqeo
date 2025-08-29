@@ -23,6 +23,7 @@ func main() {
 		Automigrate: isGoRun,
 	})
 
+
 	app.OnServe().BindFunc(routes.Register)
 
 	if err := app.Start(); err != nil {

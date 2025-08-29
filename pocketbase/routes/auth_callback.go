@@ -2,8 +2,8 @@ package routes
 
 import "github.com/pocketbase/pocketbase/core"
 
-func RedirectOAuth(se *core.ServeEvent) {
-	se.Router.GET("/api/custom-oauth2-redirect/{provider}", func(e *core.RequestEvent) error {
+func AuthCallback(se *core.ServeEvent) {
+	se.Router.GET("/auth/callback", func(e *core.RequestEvent) error {
 		provider := e.Request.PathValue("provider")
 
 		if provider != "google" {

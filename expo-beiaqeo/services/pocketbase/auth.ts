@@ -7,10 +7,11 @@ WebBrowser.maybeCompleteAuthSession();
 
 class PocketBaseAuthService {
   async loginWithGoogle(): Promise<RecordAuthResponse> {
+    const redirectUrl = `${PocketBaseConfig.url}/auth/callback`
     const recordAuth = await pb.collection('users').authWithOAuth2({ 
       provider: 'google',
       urlCallback: async (url) => {
-        await WebBrowser.openAuthSessionAsync(url).catch(console.error);
+        await WebBrowser.openAuthSessionAsync(url, redirectUrl).catch(console.error);
       },
     });
     return recordAuth;
