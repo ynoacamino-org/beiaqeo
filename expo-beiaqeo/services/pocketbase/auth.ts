@@ -13,7 +13,6 @@ class PocketBaseAuthService {
         await WebBrowser.openAuthSessionAsync(url).catch(console.error);
       },
     });
-
     return recordAuth;
   }
 
