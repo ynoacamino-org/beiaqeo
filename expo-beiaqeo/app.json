@@ -20,17 +20,17 @@
       "edgeToEdgeEnabled": true,
       "package": "com.beiaqeo.app",
       "intentFilters": [
-{
-  "action":"VIEW",
-  "data": [
-{
-  "scheme": "https",
-  "host": "beiaqeo.ynoacamino.site",
-  "pathPrefix": "/auth/callback"
-}
-  ],
-  "category":["BROWSABLE", "DEFAULT"]
-}
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "beiaqeo.ynoacamino.site",
+              "pathPrefix": "/auth/callback"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
       ]
     },
     "web": {
