@@ -8,7 +8,7 @@ module.exports = defineConfig([
   expoConfig,
   ...tseslint.configs.recommended,
   {
-    ignores: ['dist/*', 'android/*', 'ios/*', 'web-build/*', 'node_modules/*'],
+    ignores: ['dist/*', 'android/*', 'ios/*', 'web-build/*', 'node_modules/*', '*.config.*'],
   },
   {
     files: ['**/*.{ts,tsx,js,jsx}'],

@@ -9,6 +9,8 @@ import { extractAvatar } from '@/lib/utils';
 export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user, logout } = useAuth();
+  const router = useRouter();
+
   const handleLogout = async () => {
     if (Platform.OS === 'web') {
       setIsLoading(true);

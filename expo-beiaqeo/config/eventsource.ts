@@ -1,3 +1,4 @@
 import eventsource from 'react-native-sse';
 
-global.EventSource = eventsource as any;
+// @ts-expect-error: EventSource is not defined in React Native, using polyfill
+global.EventSource = eventsource;
