@@ -13,7 +13,7 @@ export default function TabLayout() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1">
       <Header />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />

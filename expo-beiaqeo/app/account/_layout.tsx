@@ -1,20 +1,18 @@
+import HeaderBack from '@/components/layout/headerBack/HeaderBack';
 import { Stack } from 'expo-router';
+import { View } from 'react-native';
 
 export default function AccountLayout() {
   return (
-    <Stack
-      screenOptions={{
-        headerShown: true,
-        animation: 'fade',
-        headerShadowVisible: false,
-        headerStyle: {
-          backgroundColor: '#00000000',
-        },
-        title: '',
-        headerBackButtonDisplayMode: 'minimal',
-      }}
-    >
-      <Stack.Screen name="index" />
-    </Stack>
+    <View className="flex-1">
+      <HeaderBack />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="index" />
+      </Stack>
+    </View >
   );
 }
