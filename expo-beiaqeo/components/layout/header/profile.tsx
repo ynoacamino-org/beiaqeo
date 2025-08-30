@@ -1,9 +1,10 @@
-import { useAuth } from "@/components/providers/authProvider";
-import { extractAvatar } from "@/lib/utils";
-import { IconUser } from "@tabler/icons-react-native";
-import { Image } from "expo-image";
-import { router } from "expo-router";
-import { TouchableOpacity } from "react-native";
+import { useAuth } from '@/components/providers/authProvider';
+import { Image } from '@/components/ui/Image';
+import { extractAvatar } from '@/lib/utils';
+import { IconUser } from '@tabler/icons-react-native';
+
+import { router } from 'expo-router';
+import { TouchableOpacity } from 'react-native';
 
 export default function Profile() {
   const { user } = useAuth();
@@ -16,6 +17,7 @@ export default function Profile() {
         user?.avatar ? (
           <Image
             source={{ uri: extractAvatar(user) }}
+            contentFit='cover'
             className="w-10 h-10 rounded-full"
           />
         ) : (
@@ -23,5 +25,5 @@ export default function Profile() {
         )
       }
     </TouchableOpacity>
-  )
+  );
 }

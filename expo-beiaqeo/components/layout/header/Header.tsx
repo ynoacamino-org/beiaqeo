@@ -5,7 +5,7 @@ import Profile from './profile';
 
 export default function Header() {
   return (
-    <View className="flex-row items-center justify-between px-4 py-3 bg-white">
+    <View className="flex-row items-center justify-between px-4 py-3 bg-white mb-4">
       <Area />
       <Profile />
     </View>
