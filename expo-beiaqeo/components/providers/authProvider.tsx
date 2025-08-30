@@ -1,5 +1,5 @@
 import { pbAuth } from '@/services/pocketbase/auth';
-import { AuthRecord } from 'pocketbase';
+import { AuthRecord } from '@/types/auth';
 import { createContext, ReactNode, use, useEffect, useState } from 'react';
 
 type AuthContextType = {
@@ -22,7 +22,7 @@ export function AuthProvider({
 
   useEffect(() => {
     const unsubscribe = pbAuth.getPocketBase().authStore.onChange((_token, model) => {
-      setUser(model);
+      setUser(model as AuthRecord);
       setIsAuthenticated(pbAuth.isAuthenticated());
     });
 
@@ -33,7 +33,7 @@ export function AuthProvider({
 
   const loginWithGoogle = async () => {
     const authData = await pbAuth.loginWithGoogle();
-    setUser(authData.record);
+    setUser(authData.record as AuthRecord);
     setIsAuthenticated(true);
   };
 

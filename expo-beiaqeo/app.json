@@ -4,14 +4,13 @@
     "slug": "beiaqeo",
     "version": "1.0.0",
     "orientation": "portrait",
+    "platforms": [
+      "android"
+    ],
     "icon": "./assets/images/icon.png",
     "scheme": "beiaqeo",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.beiaqeo.app"
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -20,17 +19,20 @@
       "edgeToEdgeEnabled": true,
       "package": "com.beiaqeo.app",
       "intentFilters": [
-{
-  "action":"VIEW",
-  "data": [
-{
-  "scheme": "https",
-  "host": "beiaqeo.ynoacamino.site",
-  "pathPrefix": "/auth/callback"
-}
-  ],
-  "category":["BROWSABLE", "DEFAULT"]
-}
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "beiaqeo.ynoacamino.site",
+              "pathPrefix": "/auth/callback"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
       ]
     },
     "web": {
@@ -53,6 +55,9 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "ios": {
+      "bundleIdentifier": "com.beiaqeo.app"
     }
   }
 }
