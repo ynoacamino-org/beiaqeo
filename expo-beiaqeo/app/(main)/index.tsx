@@ -10,7 +10,7 @@ export default function HomeScreen() {
   const {colors} = useTheme();
   return (
     <View className="flex-1 justify-start items-center px-6 gap-6">
-      <View className="bg-green-50 px-6 py-10 rounded-xl w-full border border-green-700 flex flex-col items-center justify-center gap-6">
+      <View className="bg-green-100/70 px-6 py-10 rounded-xl w-full flex flex-col items-center justify-center gap-6">
         <View className="rounded-full bg-green-700 aspect-square p-9">
           <IconMapPin color={'#ffffff'} size={36} />
         </View>
@@ -29,7 +29,7 @@ export default function HomeScreen() {
           </Text>
         </View>
       </View>
-      <View className="px-6 py-6 rounded-xl w-full border border-zinc-400 flex flex-col items-center justify-center gap-6">
+      <View className="px-6 pt-5 pb-6 rounded-xl w-full border-2 border-gray-200 flex flex-col items-center justify-center gap-6">
         <Text className="text-start text-lg font-bold w-full">
           Esta Semana
         </Text>

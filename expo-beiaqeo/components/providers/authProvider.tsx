@@ -1,5 +1,6 @@
 import { pbAuth } from '@/services/pocketbase/auth';
 import { AuthRecord } from '@/types/auth';
+import { router } from 'expo-router';
 import { createContext, ReactNode, use, useEffect, useState } from 'react';
 
 type AuthContextType = {
@@ -41,6 +42,8 @@ export function AuthProvider({
     await pbAuth.logout();
     setUser(null);
     setIsAuthenticated(false);
+
+    router.replace('/(auth)/login');
   };
 
   const refreshAuth = async () => {
